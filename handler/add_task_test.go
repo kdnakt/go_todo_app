@@ -15,10 +15,6 @@ import (
 
 func TestAddTask(t *testing.T) {
 	t.Parallel()
-	type want struct {
-		status  int
-		rspFile string
-	}
 	tests := map[string]int{
 		"ok":  http.StatusOK,
 		"bad": http.StatusBadRequest,
