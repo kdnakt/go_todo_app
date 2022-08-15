@@ -10,6 +10,8 @@ require (
 	github.com/google/go-cmp v0.5.8
 )
 
+require github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
+
 require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-playground/locales v0.14.0 // indirect
