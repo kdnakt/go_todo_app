@@ -6,6 +6,7 @@ import (
 	"github.com/kdnakt/go_todo_app/entity"
 )
 
+//go:generate go run github.com/matryer/moq -out moq_test.go . ListTasksService AddTaskService
 type ListTasksService interface {
 	ListTasks(ctx context.Context) (entity.Tasks, error)
 }
