@@ -2,6 +2,8 @@ package handler
 
 import (
 	"bytes"
+	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -9,7 +11,6 @@ import (
 
 	"github.com/go-playground/validator/v10"
 	"github.com/kdnakt/go_todo_app/entity"
-	"github.com/kdnakt/go_todo_app/store"
 	"github.com/kdnakt/go_todo_app/testutil"
 )
 
@@ -33,10 +34,17 @@ func TestAddTask(t *testing.T) {
 				bytes.NewReader(testutil.LoadFile(t, fmt.Sprintf("testdata/add_task/%s_req.json.golden", n))),
 			)
 
+			moq := &AddTaskServiceMock{}
+			moq.AddTaskFunc = func(
+				ctx context.Context, title string,
+			) (*entity.Task, error) {
+				if tt == http.StatusOK {
+					return &entity.Task{ID: 1}, nil
+				}
+				return nil, errors.New("error from mock")
+			}
 			sut := AddTask{
-				Store: &store.TaskStore{
-					Tasks: map[entity.TaskID]*entity.Task{},
-				},
+				Service:   moq,
 				Validator: validator.New(),
 			}
 			sut.ServeHTTP(w, r)
