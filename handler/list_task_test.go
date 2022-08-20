@@ -1,13 +1,14 @@
 package handler
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	"github.com/kdnakt/go_todo_app/entity"
-	"github.com/kdnakt/go_todo_app/store"
 	"github.com/kdnakt/go_todo_app/testutil"
 )
 
@@ -30,21 +31,26 @@ func TestListTask(t *testing.T) {
 				nil,
 			)
 
-			sut := ListTask{
-				Store: &store.TaskStore{
-					Tasks: map[entity.TaskID]*entity.Task{
-						1: {
+			moq := &ListTasksServiceMock{}
+			moq.ListTasksFunc = func(ctx context.Context) (entity.Tasks, error) {
+				if tt == http.StatusOK {
+					return entity.Tasks{
+						{
 							ID:     1,
 							Title:  "test1",
 							Status: "todo",
 						},
-						2: {
+						{
 							ID:     2,
 							Title:  "test2",
 							Status: "done",
 						},
-					},
-				},
+					}, nil
+				}
+				return nil, errors.New("error from mock")
+			}
+			sut := ListTask{
+				Service: moq,
 			}
 			sut.ServeHTTP(w, r)
 
