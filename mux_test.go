@@ -1,16 +1,28 @@
 package main
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/kdnakt/go_todo_app/config"
 )
 
 func TestNewMux(t *testing.T) {
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodGet, "/health", nil)
-	sut := NewMux()
+	ctx := context.Background()
+	cfg, err := config.New()
+	if err != nil {
+		t.Fatal(err)
+	}
+	sut, cleanup, err := NewMux(ctx, cfg)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer cleanup()
 	sut.ServeHTTP(w, r)
 	resp := w.Result()
 	t.Cleanup(func() { _ = resp.Body.Close() })
