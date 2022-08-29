@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/kdnakt/go_todo_app/config"
@@ -17,6 +18,10 @@ func TestNewMux(t *testing.T) {
 	cfg, err := config.New()
 	if err != nil {
 		t.Fatal(err)
+	}
+	if _, defined := os.LookupEnv("CI"); defined {
+		cfg.DBPort = 3306
+		cfg.RedisPort = 6379
 	}
 	sut, cleanup, err := NewMux(ctx, cfg)
 	if err != nil {
