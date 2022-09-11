@@ -21,7 +21,7 @@ type UserRegister interface {
 }
 
 type UserGetter interface {
-	GetUser(ctx context.Context, db store.Queryer, name string) (entity.User, error)
+	GetUser(ctx context.Context, db store.Queryer, name string) (*entity.User, error)
 }
 
 type TokenGenerator interface {

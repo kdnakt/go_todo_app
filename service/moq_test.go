@@ -245,7 +245,7 @@ var _ UserGetter = &UserGetterMock{}
 //
 // 		// make and configure a mocked UserGetter
 // 		mockedUserGetter := &UserGetterMock{
-// 			GetUserFunc: func(ctx context.Context, db store.Queryer, name string) (entity.User, error) {
+// 			GetUserFunc: func(ctx context.Context, db store.Queryer, name string) (*entity.User, error) {
 // 				panic("mock out the GetUser method")
 // 			},
 // 		}
@@ -256,7 +256,7 @@ var _ UserGetter = &UserGetterMock{}
 // 	}
 type UserGetterMock struct {
 	// GetUserFunc mocks the GetUser method.
-	GetUserFunc func(ctx context.Context, db store.Queryer, name string) (entity.User, error)
+	GetUserFunc func(ctx context.Context, db store.Queryer, name string) (*entity.User, error)
 
 	// calls tracks calls to the methods.
 	calls struct {
@@ -274,7 +274,7 @@ type UserGetterMock struct {
 }
 
 // GetUser calls GetUserFunc.
-func (mock *UserGetterMock) GetUser(ctx context.Context, db store.Queryer, name string) (entity.User, error) {
+func (mock *UserGetterMock) GetUser(ctx context.Context, db store.Queryer, name string) (*entity.User, error) {
 	if mock.GetUserFunc == nil {
 		panic("UserGetterMock.GetUserFunc: method is nil but UserGetter.GetUser was just called")
 	}
